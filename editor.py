@@ -13,7 +13,7 @@ if image:
 
     row = st.columns(6)
     row2 = st.columns(2)
-    row3 = st.columns(1)
+    row3 = st.columns(1) 
     row4 = st.columns(2)
 
     #edit functions
@@ -47,3 +47,4 @@ if image:
 
     st.write(f'{no2,2895-no1}')
     st.write(image.shape)
+    

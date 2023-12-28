@@ -45,7 +45,7 @@ if image:
     
     
     
-    #FUNCTIONLITIES
+    #FUNCTIONLITY
     
     
     '''
