@@ -43,7 +43,7 @@ if image:
     no3 = col3[0].slider(min_value=2, max_value=900, label='border-top')
     no4 = col3[1].slider(min_value=2, max_value=900, label='border-right')
 
-    img = row2[1].image(img[no2:2895-no1,no3:2896-no4])
+    row2[1].image(img)
 
     st.write(f'{no2,2895-no1}')
     st.write(image.shape)

@@ -12,43 +12,65 @@ from glob import glob
 st.title('PHOTO EDITOR APP📷')
 
 
-image = st.file_uploader('Upload your image', type=['jpg', 'png', 'jepg'])
+image = cv2.imread('winner.jpg')
+image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+# st.file_uploader('Upload your image', type=['jpg', 'png', 'jepg'])
 
-if image:
-    img = Image.open(image)
-    #display image
-    edited = st.empty()
-      
-    #specify row divisions
-    row0 = st.columns(1) 
-    row1 = st.columns(2)
-    row2 = st.columns(2)
 
-    #adjust display
-    adjust = row1[0].selectbox(options=['None', 'Brightness', 'Blur', 'Sharpness', 'Contour'], label='Adjust')
-    if adjust != 'None':
-        row2[0].slider(adjust, min_value=100, max_value=200, value=10)
-        
-    #adjust filters
-    filters = row1[1].selectbox(options=['None', 'BW', 'Vivid', 'Clone', 'Breeze'], label='filters')
-    if filters != 'None':
-        row2[1].slider(filters, min_value=100, max_value=200, value=10)
+#img = Image.open(image)
+#display image
+edited = st.empty()
+    
+#specify row divisions
+row0 = st.columns(1) 
+row1 = st.columns(2)
+row2 = st.columns(2)
 
-    st.markdown('Resize')
-    width = st.slider('width', value=img.size[0], min_value=500, max_value=img.size[0])
-    length = st.slider('length', value=img.size[1], min_value=500, max_value=img.size[1])
-    degree = st.slider('Degree', step=10,max_value=180, min_value=-180, value=0)
-    
-    edited.image(img.resize((width, length)).rotate(degree))
-    st.button('Reset', type='primary')
 
+
+#adjust display
+adjust_variables = ['None', 'Brightness', 'Blur', 'Sharpness', 'Contour']
+adjust = row1[0].selectbox(options=adjust_variables, label='Adjust')
+if adjust != 'None':
+    row2[0].slider(adjust, min_value=100, max_value=200, value=10)
     
+#adjust filters
+filters = row1[1].selectbox(options=['None', 'BW', 'Vivid', 'Clone', 'Breeze'], label='filters')
+if filters != 'None':
+    row2[1].slider(filters, min_value=100, max_value=200, value=10)
+
+st.markdown('<h4>Resize</h1>', unsafe_allow_html=True)
+
+
+#FUNCTIONLITY
+row3 = st.columns(2)
+
+width = row3[0].slider('width', value=image.shape[0], min_value=500, max_value=image.shape[0])
+length = row3[1].slider('length', value=image.shape[1], min_value=500, max_value=image.shape[1])
+degree = st.slider('Degree', step=5,max_value=180, min_value=-180, value=0)
+
+test_slider = st.slider('test', min_value=-25, max_value=-1, value=-10)
+
+
+filtered = image
+if adjust == 'Blur':
+    kernel_sharpen = np.array([[ 0, -1, 0 ],
+                        [ -1, 5, -1],
+                        [ 0, -1, 0 ]])*test_slider
+kernel_bright = np.ones((3,3), np.float32)/(0-test_slider)    
+show = cv2.filter2D(image, -1, kernel_bright)
+if adjust == 'f{adjust}':
     
-    
-    #FUNCTIONLITY
-    
-    
-    '''
+    filtered = cv2.filter2D(image, -1, kernel_sharpen)
+
+edited.image(show)
+
+
+
+
+row4 = st.columns(5)
+row4[4].button('Reset', type='primary')
+'''
     row2 = st.columns(2)
     row = st.columns(6)
     row3 = st.columns(1) 
