@@ -99,9 +99,9 @@ def main():
         format_ = st.selectbox('select format', ['jpg', 'png', 'jpeg'])
         # Save the processed image
         if st.button("SAVE", type='primary'):
-            cv2.imwrite(f"lb_editor_{uploaded_file.name}.{format_}", cv2.cvtColor(processed_image, cv2.COLOR_BGR2RGB))
-            st.success("Processed image saved successfully!")
-            st.write(uploaded_file.name)
+            file_name, file_extension = os.path.splitext(uploaded_file.name)
+            cv2.imwrite(f"lb_editor_{file_name}.{format_}", cv2.cvtColor(processed_image, cv2.COLOR_BGR2RGB))
+            st.success(f"{file_name}.{format_} saved successfully!")
     
 if __name__ == "__main__":
     main()
