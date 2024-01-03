@@ -1,11 +1,3 @@
-<<<<<<< HEAD
 streamlit
 opencv-contrib-python-headless
 numpy
-
-=======
-streamlit
-opencv-contrib-python-headless
-numpy
-
->>>>>>> 636c07fb0c750a3f6df6df4af8d37ac451fcb0a4
