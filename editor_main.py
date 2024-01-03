@@ -72,15 +72,15 @@ def main():
         # Cropping and rotation
         fancy_header("Crop & Rotate")
         row = st.columns(2)
-        x = row[0].slider("X-coordinate", 0, processed_image.shape[1], 0)
-        y = row[1].slider("Y-coordinate", 0, processed_image.shape[0], 0)
-        width = row[0].slider("Width", 1, processed_image.shape[1], processed_image.shape[1])
-        height = row[1].slider("Height", 1, processed_image.shape[0], processed_image.shape[0])
+        left = row[0].slider("left", 0, processed_image.shape[1], 0)
+        top = row[1].slider("top", 0, processed_image.shape[0], 0)
+        right = row[0].slider("right", 1, processed_image.shape[1], processed_image.shape[1])
+        bottom = row[1].slider("bottom", 1, processed_image.shape[0], processed_image.shape[0])
         
         rotation_angle = st.slider("Rotation Angle", -180, 180, 0)
         flip_option = st.checkbox("Flip Image")
         
-        processed_image = processed_image[y:y+height, x:x+width]
+        processed_image = processed_image[top:top+bottom, left:left+right]
                 
         
         if rotation_angle != 0:
