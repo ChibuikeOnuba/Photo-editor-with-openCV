@@ -1,6 +1,7 @@
 import cv2
 import streamlit as st
 import numpy as np
+from PIL import Image
 import os
 
 def main():
@@ -11,12 +12,13 @@ def main():
         res = f'<span style="color:#3030FF; font-size: {font_size}px;"><b>{text}</b></span>'
         st.markdown(res, unsafe_allow_html=True )
         
+        
     #image uploader
     uploaded_file = st.file_uploader("Choose an image", type=["jpg", "jpeg", "png"])
 
     if uploaded_file is not None:
         # Read the uploaded image
-        image = cv2.imdecode(np.fromstring(uploaded_file.read(), np.uint8), 1)
+        image = cv2.imdecode(np.frombuffer(uploaded_file.read(), np.uint8), 1)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         processed_image = image.copy()   
         
@@ -27,7 +29,7 @@ def main():
         
         #select filter
         fancy_header('Select filter')
-        filter = st.selectbox('Filter',label_visibility='collapsed', options=['None', 'Gray'])
+        filter = st.selectbox('Filter',label_visibility='collapsed', options=['None'])
         if filter == 'Gray':
             processed_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
             
@@ -45,8 +47,7 @@ def main():
             blur_radius = st.slider(f'Adjust Blur', min_value=1, max_value=27, value=5, step=2)
             processed_image = cv2.GaussianBlur(processed_image, (blur_radius, blur_radius), 0)
             edited.image(processed_image)
-        else:
-            edited.image(image)
+
             
         # adjust contrast if selected
         if contrast_option:
@@ -97,11 +98,25 @@ def main():
 
         #select image format
         format_ = st.selectbox('select format', ['jpg', 'png', 'jpeg'])
+        
+        pil_image = Image.fromarray(processed_image.astype('uint8'), 'RGB')
+   
         # Save the processed image
-        if st.button("SAVE", type='primary'):
-            file_name, file_extension = os.path.splitext(uploaded_file.name)
-            cv2.imwrite(f"lb_editor_{file_name}.{format_}", cv2.cvtColor(processed_image, cv2.COLOR_BGR2RGB))
+        from io import BytesIO
+        buf = BytesIO()
+        pil_image.save(buf, format="JPEG")
+        byte_im = buf.getvalue()
+        
+        # Create download button
+        file_name, file_extension = os.path.splitext(uploaded_file.name)
+        download_button = st.download_button(
+            label="Download Image",
+            data=byte_im,
+            key="download_button",
+            file_name=f"lb_editor_{file_name}.{format_}", type='primary'
+        )
+        if download_button:
             st.success(f"{file_name}.{format_} saved successfully!")
-    
+
 if __name__ == "__main__":
     main()
